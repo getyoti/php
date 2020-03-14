@@ -50,7 +50,7 @@ class BaseProfile
      *
      * @return \Yoti\Profile\Attribute[]
      */
-    private function getAttributesByName(string $attributeName): array
+    public function getAttributesByName(string $attributeName): array
     {
         return $this->attributesMap[$attributeName] ?? [];
     }

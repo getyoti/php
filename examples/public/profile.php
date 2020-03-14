@@ -1,5 +1,120 @@
 <?php
+
+use Yoti\Media\Image;
+use Yoti\Profile\Attribute\AgeVerification;
+use Yoti\Profile\Attribute\DocumentDetails;
+use Yoti\Profile\Attribute\MultiValue;
+
 require_once __DIR__ . '/profile.inc.php';
+
+/**
+ * Formats attribute value based on type.
+ *
+ * @param mixed $value
+ */
+function formatAttributeValue($value)
+{
+    if ($value instanceof MultiValue) {
+        foreach ($value as $multiValue) {
+            formatAttributeValue($multiValue);
+        }
+    } elseif ($value instanceof Image) {
+        formatImage($value);
+    } elseif ($value instanceof DocumentDetails) {
+        formatDocumentDetails($value);
+    } elseif ($value instanceof \DateTime) {
+        echo htmlspecialchars($value->format('d-m-Y'));
+    } else {
+        echo htmlspecialchars($value);
+    }
+}
+
+/**
+ * Format Image.
+ *
+ * @param \Yoti\Entity\Image $value
+ */
+function formatImage(Image $image)
+{
+    ?>
+    <img src="<?php echo htmlspecialchars($image->getBase64Content()); ?>" />
+    <?php
+}
+
+/**
+ * Format Document Details.
+ *
+ * @param \Yoti\Entity\DocumentDetails $value
+ */
+function formatDocumentDetails(DocumentDetails $documentDetails)
+{
+    ?>
+    <table>
+        <tr>
+            <td>Type</td>
+            <td><?php echo htmlspecialchars($documentDetails->getType()); ?></td>
+        </tr>
+        <tr>
+            <td>Issuing Country</td>
+            <td><?php echo htmlspecialchars($documentDetails->getIssuingCountry()); ?></td>
+        </tr>
+        <tr>
+            <td>Document Number</td>
+            <td><?php echo htmlspecialchars($documentDetails->getDocumentNumber()); ?></td>
+        </tr>
+        <tr>
+            <td>Expiration Date</td>
+            <td><?php echo htmlspecialchars($documentDetails->getExpirationDate()->format('d-m-Y')); ?></td>
+        </tr>
+    </table>
+    <?php
+}
+
+/**
+ * Format Age Verification.
+ *
+ * @param \Yoti\Entity\AgeVerification $ageVerification
+ */
+function formatAgeVerification(AgeVerification $ageVerification)
+{
+    ?>
+    <table>
+        <tr>
+            <td>Check Type</td>
+            <td><?php echo htmlspecialchars($ageVerification->getCheckType()); ?></td>
+        </tr>
+        <tr>
+            <td>Age</td>
+            <td><?php echo htmlspecialchars($ageVerification->getAge()); ?></td>
+        </tr>
+        <tr>
+            <td>Result</td>
+            <td><?php echo htmlspecialchars($ageVerification->getResult()); ?></td>
+        </tr>
+    </table>
+    <?php
+}
+
+
+/**
+ * Format Structured Postal Address.
+ *
+ * @param array $structuredAddress
+ */
+function formatStructuredAddress(array $structuredAddress)
+{
+    ?>
+    <table>
+        <?php foreach ($structuredAddress as $key => $value): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($key); ?></td>
+                <td><?php echo htmlspecialchars($value); ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <?php
+}
+
 ?>
 <!DOCTYPE html>
 <html class="yoti-html">
@@ -68,72 +183,15 @@ require_once __DIR__ . '/profile.inc.php';
                                 <div class="yoti-attribute-value">
                                    <div class="yoti-attribute-value-text">
                                    <?php
-                                   $attributeObj = $item['obj'];
                                    switch ($item['name']) {
-                                        case 'Date of birth';
-                                            echo htmlspecialchars($item['obj']->getValue()->format('d-m-Y'));
-                                            break;
                                         case 'Age Verification':
-                                            ?>
-                                            <table>
-                                                <tr>
-                                                    <td>Check Type</td>
-                                                    <td><?php echo htmlspecialchars($item['age_verification']->getCheckType()); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Age</td>
-                                                    <td><?php echo htmlspecialchars($item['age_verification']->getAge()); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Result</td>
-                                                    <td><?php echo htmlspecialchars($item['age_verification']->getResult()); ?></td>
-                                                </tr>
-                                            </table>
-                                            <?php
+                                            formatAgeVerification($item['age_verification']);
                                             break;
                                         case 'Structured Postal Address':
-                                            ?>
-                                            <table>
-                                                <?php foreach ($item['obj']->getValue() as $key => $value): ?>
-                                                    <tr>
-                                                        <td><?php echo htmlspecialchars($key); ?></td>
-                                                        <td><?php echo htmlspecialchars($value); ?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            </table>
-                                            <?php
-                                            break;
-                                        case 'Document Details':
-                                            ?>
-                                            <table>
-                                                <tr>
-                                                    <td>Type</td>
-                                                    <td><?php echo htmlspecialchars($item['obj']->getValue()->getType()); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Issuing Country</td>
-                                                    <td><?php echo htmlspecialchars($item['obj']->getValue()->getIssuingCountry()); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Document Number</td>
-                                                    <td><?php echo htmlspecialchars($item['obj']->getValue()->getDocumentNumber()); ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Expiration Date</td>
-                                                    <td><?php echo htmlspecialchars($item['obj']->getValue()->getExpirationDate()->format('d-m-Y')); ?></td>
-                                                </tr>
-                                            </table>
-                                            <?php
-                                            break;
-                                        case 'Document Images':
-                                            foreach ($item['obj']->getValue() as $image) {
-                                            ?>
-                                                <img src="<?php echo htmlspecialchars($image->getBase64Content()); ?>" />
-                                            <?php
-                                            }
+                                            formatStructuredAddress($item['obj']->getValue());
                                             break;
                                         default:
-                                            echo htmlspecialchars($item['obj']->getValue());
+                                            formatAttributeValue($item['obj']->getValue());
                                    }
                                    ?>
                                    </div>
@@ -143,7 +201,7 @@ require_once __DIR__ . '/profile.inc.php';
                                    <div class="yoti-attribute-anchors-head -value">Value</div>
                                    <div class="yoti-attribute-anchors-head -subtype">Sub type</div>
 
-                                   <?php foreach($attributeObj->getAnchors() as $anchor) : ?>
+                                   <?php foreach($item['obj']->getAnchors() as $anchor) : ?>
                                        <div class="yoti-attribute-anchors -s-v"><?php echo htmlspecialchars($anchor->getType()); ?></div>
                                        <div class="yoti-attribute-anchors -value"><?php echo htmlspecialchars($anchor->getValue()); ?></div>
                                        <div class="yoti-attribute-anchors -subtype"><?php echo htmlspecialchars($anchor->getSubType()); ?></div>

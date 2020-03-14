@@ -84,7 +84,7 @@ class DynamicPolicyBuilderTest extends TestCase
     /**
      * @covers ::withWantedAttributeByName
      */
-    public function testWithWantedAttributeByName()
+    public function testWithWantedAttributeByNameWithConstraints()
     {
         $someAttributeName = 'some_attribute_name';
 
@@ -157,10 +157,46 @@ class DynamicPolicyBuilderTest extends TestCase
     }
 
     /**
+     * @covers ::withWantedAttribute
+     * @covers ::withFamilyName
+     */
+    public function testWithDuplicateAttributeDifferentConstraints()
+    {
+        $passportConstraints = (new ConstraintsBuilder())
+            ->withSourceConstraint(
+                (new SourceConstraintBuilder())
+                    ->withPassport()
+                    ->build()
+            )
+            ->build();
+
+        $drivingLicenseConstraints = (new ConstraintsBuilder())
+            ->withSourceConstraint(
+                (new SourceConstraintBuilder())
+                    ->withDrivingLicence()
+                    ->build()
+            )
+            ->build();
+
+        $dynamicPolicy = (new DynamicPolicyBuilder())
+            ->withFamilyName()
+            ->withFamilyName($passportConstraints)
+            ->withFamilyName($drivingLicenseConstraints)
+            ->build();
+
+        $jsonData = $dynamicPolicy->jsonSerialize();
+
+        $this->assertCount(3, $jsonData['wanted']);
+        foreach ($jsonData['wanted'] as $wantedAttribute) {
+            $this->assertEquals('family_name', $wantedAttribute->getName());
+        }
+    }
+
+    /**
      * @covers ::build
      * @covers ::withWantedAttributeByName
      */
-    public function testWithAttributesByName()
+    public function testWithWantedAttributeByName()
     {
         $dynamicPolicy = (new DynamicPolicyBuilder())
             ->withWantedAttributeByName('family_name')

@@ -69,7 +69,6 @@ class BaseProfileTest extends TestCase
      * @covers ::__construct
      * @covers ::getProfileAttribute
      * @covers ::setAttributesMap
-     * @covers ::getAttributesByName
      */
     public function testGetProfileAttribute()
     {
@@ -87,5 +86,25 @@ class BaseProfileTest extends TestCase
         $attributesList = $this->baseProfile->getAttributesList(self::SOME_ATTRIBUTE);
         $this->assertCount(3, $attributesList);
         $this->assertContainsOnlyInstancesOf(Attribute::class, $attributesList);
+    }
+
+    /**
+     * @covers ::__construct
+     * @covers ::getAttributesByName
+     */
+    public function testGetAttributesByName()
+    {
+        $attributes = $this->baseProfile->getAttributesByName(self::SOME_ATTRIBUTE);
+        $this->assertCount(2, $attributes);
+        $this->assertSame($this->someAttribute, $attributes[0]);
+        $this->assertSame($this->someOtherAttributeWithSameName, $attributes[1]);
+
+        $invalidAttributes = $this->baseProfile->getAttributesByName(self::SOME_INVALID_ATTRIBUTE);
+        $this->assertIsArray($invalidAttributes);
+        $this->assertEmpty($invalidAttributes);
+
+        $missingAttributes = $this->baseProfile->getAttributesByName(self::SOME_MISSING_ATTRIBUTE);
+        $this->assertIsArray($missingAttributes);
+        $this->assertEmpty($missingAttributes);
     }
 }
