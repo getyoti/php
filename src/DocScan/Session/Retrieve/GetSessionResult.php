@@ -207,6 +207,14 @@ class GetSessionResult
     }
 
     /**
+     * @return mixed[]
+     */
+    public function getWatchlistAdvancedCaChecks(): array
+    {
+        return $this->filterCheckByType(WatchlistAdvancedCaCheckResponse::class);
+    }
+
+    /**
      * @return LivenessCheckResponse[]
      */
     public function getLivenessChecks(): array
@@ -238,6 +246,8 @@ class GetSessionResult
                 return new ThirdPartyIdentityCheckResponse($check);
             case Constants::WATCHLIST_SCREENING:
                 return new WatchlistScreeningCheckResponse($check);
+            case Constants::WATCHLIST_ADVANCED_CA:
+                return new WatchlistAdvancedCaCheckResponse($check);
             default:
                 return new CheckResponse($check);
         }

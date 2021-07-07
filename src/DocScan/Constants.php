@@ -10,8 +10,16 @@ class Constants
     public const SUPPLEMENTARY_DOCUMENT_TEXT_DATA_CHECK = 'SUPPLEMENTARY_DOCUMENT_TEXT_DATA_CHECK';
     public const ID_DOCUMENT_FACE_MATCH = 'ID_DOCUMENT_FACE_MATCH';
     public const THIRD_PARTY_IDENTITY = 'THIRD_PARTY_IDENTITY';
-    public const WATCHLIST_SCREENING = 'WATCHLIST_SCREENING';
     public const LIVENESS = 'LIVENESS';
+    public const WATCHLIST_SCREENING = 'WATCHLIST_SCREENING';
+    public const WATCHLIST_ADVANCED_CA = 'WATCHLIST_ADVANCED_CA';
+
+    public const WITH_YOTI_ACCOUNT = 'WITH_YOTI_ACCOUNT';
+    public const WITH_CUSTOM_ACCOUNT = 'WITH_CUSTOM_ACCOUNT';
+    public const TYPE_LIST = 'TYPE_LIST';
+    public const PROFILE = 'PROFILE';
+    public const EXACT = 'EXACT';
+    public const FUZZY = 'FUZZY';
 
     public const ADVERSE_MEDIA = 'ADVERSE-MEDIA';
     public const SANCTIONS = 'SANCTIONS';

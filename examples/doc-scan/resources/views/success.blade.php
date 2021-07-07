@@ -242,6 +242,30 @@
                                 </div>
                             </div>
                         @endif
+
+                        @if (count($sessionResult->getWatchlistAdvancedCaChecks()) > 0)
+                            <div class="card">
+                                <div class="card-header" id="watchlist-advanced-ca-checks">
+                                    <h3 class="mb-0">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse"
+                                                data-target="#collapse-watchlist-advanced-ca-checks"
+                                                aria-expanded="true"
+                                                aria-controls="collapse-watchlist-advanced-ca-checks">
+                                            Watchlist Advanced Checks
+                                        </button>
+                                    </h3>
+                                </div>
+
+                                <div id="collapse-watchlist-advanced-ca-checks" class="collapse"
+                                     aria-labelledby="watchlist-advanced-ca-checks">
+                                    <div class="card-body">
+                                        @foreach($sessionResult->getWatchlistAdvancedCaChecks() as $check)
+                                            @include('partial/check', ['check' => $check])
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -642,7 +666,7 @@
 
                         <div class="accordion mt-3">
 
-                            @if (count($livenessResource->getFrames()) > 0)
+                            @if ($livenessResource->getFrames() != null && count($livenessResource->getFrames()) > 0)
                                 <div class="card">
                                     <div class="card-header" id="liveness-{{ $livenessNum }}-frames">
                                         <h3 class="mb-0">

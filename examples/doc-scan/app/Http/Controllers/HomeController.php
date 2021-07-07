@@ -10,6 +10,7 @@ use Yoti\DocScan\Session\Create\Check\RequestedFaceMatchCheckBuilder;
 use Yoti\DocScan\Session\Create\Check\RequestedIdDocumentComparisonCheckBuilder;
 use Yoti\DocScan\Session\Create\Check\RequestedLivenessCheckBuilder;
 use Yoti\DocScan\Session\Create\Check\RequestedThirdPartyIdentityCheckBuilder;
+use Yoti\DocScan\Session\Create\Check\RequestedWatchlistAdvancedCaCheckBuilder;
 use Yoti\DocScan\Session\Create\Check\RequestedWatchlistScreeningCheckBuilder;
 use Yoti\DocScan\Session\Create\Check\RequestedWatchlistScreeningConfigBuilder;
 use Yoti\DocScan\Session\Create\Filters\Orthogonal\OrthogonalRestrictionsFilterBuilder;
@@ -59,6 +60,10 @@ class HomeController extends BaseController
             ->withRequestedCheck(
                 (new RequestedWatchlistScreeningCheckBuilder())
                     ->withConfig($watchScreeningConfig)
+                    ->build()
+            )
+            ->withRequestedCheck(
+                (new RequestedWatchlistAdvancedCaCheckBuilder())
                     ->build()
             )
             ->withRequestedTask(
