@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Yoti\Exception;
 
-class ActivityDetailsException extends \Exception
+use Yoti\Exception\base\YotiException;
+
+class ActivityDetailsException extends YotiException
 {
+
 }

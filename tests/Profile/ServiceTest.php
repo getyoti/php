@@ -106,8 +106,7 @@ class ServiceTest extends TestCase
      */
     public function testGetActivityDetailsFailure($statusCode)
     {
-        $this->expectException(\Yoti\Exception\ActivityDetailsException::class);
-        $this->expectExceptionMessage("Server responded with {$statusCode}");
+        $this->expectException(\Yoti\Exception\base\YotiException::class);
 
         $profileService = $this->createProfileServiceWithResponse($statusCode);
         $profileService->getActivityDetails(file_get_contents(TestData::YOTI_CONNECT_TOKEN));

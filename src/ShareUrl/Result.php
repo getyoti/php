@@ -24,6 +24,7 @@ class Result
 
     /**
      * @param array<string, string> $result
+     * @throws ShareUrlException
      */
     public function __construct(array $result)
     {
@@ -37,7 +38,7 @@ class Result
      *
      * @return string
      *
-     * @throws \Yoti\Exception\ShareUrlException
+     * @throws ShareUrlException
      */
     private function getResultValue(array $result, string $key): string
     {

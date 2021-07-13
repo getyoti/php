@@ -20,19 +20,19 @@ class Service
     private $sdkId;
 
     /**
-     * @var \Yoti\Util\PemFile
+     * @var PemFile
      */
     private $pemFile;
 
     /**
-     * @var \Yoti\Util\Config
+     * @var Config
      */
     private $config;
 
     /**
      * @param string $sdkId
-     * @param \Yoti\Util\PemFile $pemFile
-     * @param \Yoti\Util\Config $config
+     * @param PemFile $pemFile
+     * @param Config $config
      */
     public function __construct(string $sdkId, PemFile $pemFile, Config $config)
     {
@@ -42,11 +42,11 @@ class Service
     }
 
     /**
-     * @param \Yoti\ShareUrl\DynamicScenario $dynamicScenario
+     * @param DynamicScenario $dynamicScenario
      *
-     * @return \Yoti\ShareUrl\Result
+     * @return Result
      *
-     * @throws \Yoti\Exception\ShareUrlException
+     * @throws ShareUrlException
      */
     public function createShareUrl(DynamicScenario $dynamicScenario): Result
     {
@@ -62,7 +62,7 @@ class Service
 
         $httpCode = $response->getStatusCode();
         if ($httpCode < 200 || $httpCode > 299) {
-            throw new ShareUrlException("Server responded with {$httpCode}");
+            throw new ShareUrlException("Server responded with {$httpCode}", $response);
         }
 
         return new Result(Json::decode((string) $response->getBody()));

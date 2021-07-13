@@ -8,6 +8,8 @@ use GuzzleHttp\Psr7;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Yoti\Constants;
+use Yoti\Exception\base\YotiException;
+use Yoti\Exception\PemFileException;
 use Yoti\ShareUrl\DynamicScenario;
 use Yoti\ShareUrl\DynamicScenarioBuilder;
 use Yoti\ShareUrl\Policy\DynamicPolicyBuilder;
@@ -84,8 +86,7 @@ class ServiceTest extends TestCase
      */
     public function testCreateShareUrlFailure($statusCode)
     {
-        $this->expectException(\Yoti\Exception\ShareUrlException::class);
-        $this->expectExceptionMessage("Server responded with {$statusCode}");
+        $this->expectException(YotiException::class);
 
         $yotiClient = $this->createServiceWithErrorResponse($statusCode);
         $yotiClient->createShareUrl($this->createMock(DynamicScenario::class));
@@ -94,7 +95,8 @@ class ServiceTest extends TestCase
     /**
      * @param int $statusCode
      *
-     * @return \Yoti\YotiClient
+     * @return Service
+     * @throws PemFileException
      */
     private function createServiceWithErrorResponse($statusCode)
     {

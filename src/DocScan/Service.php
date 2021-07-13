@@ -80,7 +80,7 @@ class Service
 
         self::assertResponseIsSuccess($response);
 
-        $result = Json::decode((string) $response->getBody());
+        $result = Json::decode((string)$response->getBody());
 
         return new CreateSessionResult($result);
     }
@@ -105,7 +105,7 @@ class Service
 
         self::assertResponseIsSuccess($response);
 
-        $result = Json::decode((string) $response->getBody());
+        $result = Json::decode((string)$response->getBody());
 
         return new GetSessionResult($result);
     }
@@ -152,7 +152,7 @@ class Service
 
         self::assertResponseIsSuccess($response);
 
-        $content = (string) $response->getBody();
+        $content = (string)$response->getBody();
         $mimeType = $response->getHeader("Content-Type")[0] ?? '';
 
         return new Media($mimeType, $content);
@@ -184,6 +184,7 @@ class Service
      * Gets a list of supported documents.
      *
      * @return SupportedDocumentsResponse
+     * @throws DocScanException
      */
     public function getSupportedDocuments(): SupportedDocumentsResponse
     {
@@ -197,14 +198,13 @@ class Service
 
         self::assertResponseIsSuccess($response);
 
-        $result = Json::decode((string) $response->getBody());
+        $result = Json::decode((string)$response->getBody());
 
         return new SupportedDocumentsResponse($result);
     }
 
     /**
      * @param ResponseInterface $response
-     *
      * @throws DocScanException
      */
     private static function assertResponseIsSuccess(ResponseInterface $response): void

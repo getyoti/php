@@ -12,6 +12,8 @@ use Yoti\Aml\Country;
 use Yoti\Aml\Profile;
 use Yoti\Aml\Result;
 use Yoti\Aml\Service;
+use Yoti\Exception\base\YotiException;
+use Yoti\Exception\PemFileException;
 use Yoti\Test\TestCase;
 use Yoti\Test\TestData;
 use Yoti\Util\Config;
@@ -82,8 +84,7 @@ class ServiceTest extends TestCase
      */
     public function testPerformAmlCheckFailure($statusCode)
     {
-        $this->expectException(\Yoti\Exception\AmlException::class);
-        $this->expectExceptionMessage("Server responded with {$statusCode}");
+        $this->expectException(YotiException::class);
 
         $amlService = $this->createServiceWithErrorResponse($statusCode);
         $amlService->performCheck($this->createMock(Profile::class));
@@ -98,8 +99,7 @@ class ServiceTest extends TestCase
      */
     public function testPerformAmlCheckFailureWithErrorMessage($statusCode)
     {
-        $this->expectException(\Yoti\Exception\AmlException::class);
-        $this->expectExceptionMessage('Error - some property: some message');
+        $this->expectException(YotiException::class);
 
         $amlService = $this->createServiceWithErrorResponse(
             $statusCode,
@@ -125,8 +125,7 @@ class ServiceTest extends TestCase
      */
     public function testPerformAmlCheckFailureWithCode($statusCode)
     {
-        $this->expectException(\Yoti\Exception\AmlException::class);
-        $this->expectExceptionMessage("SOME_CODE - Server responded with {$statusCode}");
+        $this->expectException(YotiException::class);
 
         $amlService = $this->createServiceWithErrorResponse(
             $statusCode,
@@ -147,8 +146,7 @@ class ServiceTest extends TestCase
      */
     public function testPerformAmlCheckFailureWithCodeAndErrors($statusCode)
     {
-        $this->expectException(\Yoti\Exception\AmlException::class);
-        $this->expectExceptionMessage("SOME_CODE - some property: some message");
+        $this->expectException(YotiException::class);
 
         $amlService = $this->createServiceWithErrorResponse(
             $statusCode,
@@ -175,8 +173,7 @@ class ServiceTest extends TestCase
      */
     public function testPerformAmlCheckFailureWithoutJsonResponse($statusCode)
     {
-        $this->expectException(\Yoti\Exception\AmlException::class);
-        $this->expectExceptionMessage("Server responded with {$statusCode}");
+        $this->expectException(YotiException::class);
 
         $amlService = $this->createServiceWithErrorResponse(
             $statusCode,
@@ -189,8 +186,10 @@ class ServiceTest extends TestCase
 
     /**
      * @param int $statusCode
-     *
-     * @return \Yoti\Aml\Service
+     * @param string $body
+     * @param string|null $contentType
+     * @return Service
+     * @throws PemFileException
      */
     private function createServiceWithErrorResponse($statusCode, $body = '{}', ?string $contentType = null)
     {

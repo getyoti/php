@@ -9,6 +9,8 @@ use Yoti\DocScan\Session\Create\CreateSessionResult;
 use Yoti\DocScan\Session\Create\SessionSpecification;
 use Yoti\DocScan\Session\Retrieve\GetSessionResult;
 use Yoti\DocScan\Support\SupportedDocumentsResponse;
+use Yoti\Exception\base\YotiException;
+use Yoti\Exception\PemFileException;
 use Yoti\Media\Media;
 use Yoti\Util\Config;
 use Yoti\Util\Env;
@@ -42,7 +44,7 @@ class DocScanClient
      * @param array<string, mixed> $options (optional)
      *   SDK configuration options - {@see \Yoti\Util\Config} for available options.
      *
-     * @throws \Yoti\Exception\PemFileException
+     * @throws PemFileException
      */
     public function __construct(
         string $sdkId,
@@ -66,7 +68,7 @@ class DocScanClient
      *
      * @param SessionSpecification $sessionSpecification
      * @return CreateSessionResult
-     * @throws Exception\DocScanException
+     * @throws YotiException
      */
     public function createSession(SessionSpecification $sessionSpecification): CreateSessionResult
     {
@@ -78,7 +80,7 @@ class DocScanClient
      *
      * @param string $sessionId
      * @return GetSessionResult
-     * @throws Exception\DocScanException
+     * @throws YotiException
      */
     public function getSession(string $sessionId): GetSessionResult
     {
@@ -90,7 +92,7 @@ class DocScanClient
      * of its related resources.
      *
      * @param string $sessionId
-     * @throws Exception\DocScanException
+     * @throws YotiException
      */
     public function deleteSession(string $sessionId): void
     {
@@ -105,7 +107,7 @@ class DocScanClient
      * @param string $sessionId
      * @param string $mediaId
      * @return Media
-     * @throws Exception\DocScanException
+     * @throws YotiException
      */
     public function getMediaContent(string $sessionId, string $mediaId): Media
     {
@@ -118,7 +120,7 @@ class DocScanClient
      *
      * @param string $sessionId
      * @param string $mediaId
-     * @throws Exception\DocScanException
+     * @throws YotiException
      */
     public function deleteMediaContent(string $sessionId, string $mediaId): void
     {
@@ -129,6 +131,7 @@ class DocScanClient
      * Gets a list of supported documents.
      *
      * @return SupportedDocumentsResponse
+     * @throws YotiException
      */
     public function getSupportedDocuments(): SupportedDocumentsResponse
     {
